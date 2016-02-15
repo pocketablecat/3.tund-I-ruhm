@@ -17,6 +17,7 @@
 
      // KÕIK muuutujad, mida muudetakse ja on rakendusega seotud defineeritakse siin
      this.click_count = 0;
+     this.currentRoute = null;
      console.log(this);
 
      // Kui tahan Moosipurgile referenci siis kasutan THIS = MOOSIPURGI RAKENDUS ISE
@@ -54,6 +55,8 @@
        //kuulan aadressirea vahetust
        window.addEventListener('hashchange', this.routeChange.bind(this));
 
+       
+
        // esimene loogika oleks see, et kuulame hiireklikki nupul
        this.bindMouseEvents();
 
@@ -73,7 +76,26 @@
      },
 
      routeChange: function(event){
-       console.log(location.hash);
+
+       //kirjutan muuutujasse lehe nime, võtan maha #
+       this.currentRoute = location.hash.slice(1);
+       console.log(this.currentRoute);
+
+       //muudan menüü lingi aktiivseks
+       this.updateMenu();
+
+
+     },
+
+     updateMenu: function() {
+       //http://stackoverflow.com/questions/195951/change-an-elements-class-with-javascript
+       //1) võtan maha aktiivse menüülingi kui on
+       document.querySelector('.active-menu').className = document.querySelector('.active-menu').className.replace('active-menu', '');
+
+       //2) lisan uuele juurde
+       //console.log(location.hash);
+       document.querySelector('.'+this.currentRoute).className += ' active-menu';
+
      }
 
    };
