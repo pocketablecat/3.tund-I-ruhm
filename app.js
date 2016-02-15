@@ -10,6 +10,9 @@
      //this viitab Moosipurk fn
      Moosipurk.instance = this;
 
+     this.routes = Moosipurk.routes;
+     // this.routes['home-view'].render()
+
      console.log('moosipurgi sees');
 
      // KÕIK muuutujad, mida muudetakse ja on rakendusega seotud defineeritakse siin
@@ -22,6 +25,25 @@
 
    window.Moosipurk = Moosipurk; // Paneme muuutja külge
 
+   Moosipurk.routes = {
+     'home-view': {
+       'render': function(){
+         // käivitame siis kui lehte laeme
+         console.log('>>>>avaleht');
+       }
+     },
+     'list-view': {
+       'render': function(){
+         // käivitame siis kui lehte laeme
+         console.log('>>>>loend');
+       }
+     },
+     'manage-view': {
+       'render': function(){
+         // käivitame siis kui lehte laeme
+       }
+     }
+   };
 
    // Kõik funktsioonid lähevad Moosipurgi külge
    Moosipurk.prototype = {
@@ -29,8 +51,11 @@
      init: function(){
        console.log('Rakendus läks tööle');
 
-        // esimene loogika oleks see, et kuulame hiireklikki nupul
-        this.bindMouseEvents();
+       //kuulan aadressirea vahetust
+       window.addEventListener('hashchange', this.routeChange.bind(this));
+
+       // esimene loogika oleks see, et kuulame hiireklikki nupul
+       this.bindMouseEvents();
 
      },
 
@@ -45,6 +70,10 @@
        this.click_count++;
        console.log(this.click_count);
 
+     },
+
+     routeChange: function(event){
+       console.log(location.hash);
      }
 
    };
