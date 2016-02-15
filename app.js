@@ -37,6 +37,12 @@
        'render': function(){
          // käivitame siis kui lehte laeme
          console.log('>>>>loend');
+
+         //simulatsioon laeb kaua
+         window.setTimeout(function(){
+           document.querySelector('.loading').innerHTML = 'laetud!';
+         }, 3000);
+
        }
      },
      'manage-view': {
@@ -55,7 +61,15 @@
        //kuulan aadressirea vahetust
        window.addEventListener('hashchange', this.routeChange.bind(this));
 
-       
+       // kui aadressireal ei ole hashi siis lisan juurde
+       if(!window.location.hash){
+         window.location.hash = 'home-view';
+         // routechange siin ei ole vaja sest käsitsi muutmine käivitab routechange event'i ikka
+       }else{
+         //esimesel käivitamisel vaatame urli üle ja uuendame menüüd
+         this.routeChange();
+       }
+
 
        // esimene loogika oleks see, et kuulame hiireklikki nupul
        this.bindMouseEvents();
@@ -68,10 +82,13 @@
      },
 
      addNewClick: function(event){
-       console.log(event);
+       //salvestame purgi
+       //console.log(event);
 
-       this.click_count++;
-       console.log(this.click_count);
+       var title = document.querySelector('.title').value;
+       var ingredients = document.querySelector('.ingredients').value;
+
+       console.log(title + ' ' + ingredients);
 
      },
 
@@ -81,8 +98,18 @@
        this.currentRoute = location.hash.slice(1);
        console.log(this.currentRoute);
 
-       //muudan menüü lingi aktiivseks
-       this.updateMenu();
+       //kas meil on selline leht olemas?
+       if(this.routes[this.currentRoute]){
+
+         //muudan menüü lingi aktiivseks
+         this.updateMenu();
+
+         this.routes[this.currentRoute].render();
+
+
+       }else{
+         /// 404 - ei olnud
+       }
 
 
      },
@@ -98,6 +125,47 @@
 
      }
 
+   }; // MOOSIPURGI LÕPP
+
+   var Jar = function(new_title, new_ingredients){
+     this.title = new_title;
+     this.ingredients = new_ingredients;
+     console.log('created new jar');
+   };
+
+   Jar.prototype = {
+     createHtmlElement: function(){
+
+       // võttes title ja ingredients ->
+       /*
+       li
+        span.letter
+          M <- title esimene täht
+        span.content
+          title | ingredients
+       */
+
+       var li = document.createElement('li');
+
+       var span = document.createElement('span');
+       span.className = 'letter';
+
+       var letter = document.createTextNode(this.title.charAt(0));
+       span.appendChild(letter);
+
+       li.appendChild(span);
+
+       span_with_content = document.createElement('span');
+       span_with_content.className = 'content';
+
+       content = document.createTextNode(this.title + ' | ' + this.ingredients);
+       span_with_content.appendChild(content);
+
+       li.appendChild(span_with_content);
+
+       return li;
+
+     }
    };
 
    // kui leht laetud käivitan Moosipurgi rakenduse
